@@ -1,4 +1,4 @@
-import { STORAGE_KEY } from "../../constants";
+import { STORAGE_DEFAULT_TTL, STORAGE_KEY } from "../../constants";
 import { Book } from "../../types/book";
 import { StorageMethods } from "../../types/storage";
 
@@ -25,20 +25,23 @@ const LocalStorage: StorageMethods = {
     ) as Book[];
     const favoriteList = JSON.parse(
       localStorage.getItem(`${STORAGE_KEY}_favorites`) || "[]",
-    ) as string[];
+    ) as number[];
 
     return {
       online: onlineBooks,
       local: localBooks,
       favorites: favoriteList,
       updatedAt: localStorage.getItem(`${STORAGE_KEY}_updatedAt`) || "",
-      ttl: parseInt(localStorage.getItem(`${STORAGE_KEY}_ttl`) || `0`, 10),
+      ttl: parseInt(
+        localStorage.getItem(`${STORAGE_KEY}_ttl`) || `${STORAGE_DEFAULT_TTL}`,
+        10,
+      ),
     };
   },
-  ToggleFavorite: (id: string) => {
+  ToggleFavorite: (id: number) => {
     const favoriteList = JSON.parse(
-      localStorage.getItem("favorites") || "[]",
-    ) as string[];
+      localStorage.getItem(`${STORAGE_KEY}_favorites`) || "[]",
+    ) as number[];
 
     const favoriteIdx = favoriteList.indexOf(id);
 
@@ -48,10 +51,16 @@ const LocalStorage: StorageMethods = {
       favoriteList.splice(favoriteIdx, 1);
     }
 
-    localStorage.setItem("favorites", JSON.stringify(favoriteList));
+    localStorage.setItem(
+      `${STORAGE_KEY}_favorites`,
+      JSON.stringify(favoriteList),
+    );
   },
   SetTTL: (ttl) => {
     localStorage.setItem(`${STORAGE_KEY}_ttl`, `${ttl}`);
+  },
+  SetUpdatedAt: (updatedAt) => {
+    localStorage.setItem(`${STORAGE_KEY}_updatedAt`, updatedAt);
   },
 };
 

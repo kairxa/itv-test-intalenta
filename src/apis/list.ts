@@ -1,6 +1,6 @@
 import { BASE_API_URL } from "../constants";
 import { Book } from "../types/book";
-import { BookStorage } from "../types/storage";
+import CombineBooksFromStorage from "../utils/combine-books";
 import LocalStorage from "../utils/storage/localStorage";
 
 const getListOnline = async (): Promise<Book[]> => {
@@ -9,8 +9,7 @@ const getListOnline = async (): Promise<Book[]> => {
   return books;
 };
 
-const GetList = async (): Promise<BookStorage> => {
-  console.log("asdasd");
+const GetList = async (): Promise<Book[]> => {
   const localStorageData = LocalStorage.Get();
   const currentTime = new Date();
   const updateTTLTime = new Date(
@@ -18,14 +17,16 @@ const GetList = async (): Promise<BookStorage> => {
   );
 
   if (currentTime < updateTTLTime) {
-    return localStorageData;
+    return CombineBooksFromStorage(localStorageData);
   }
 
   const newOnlineData = await getListOnline();
   localStorageData.online = newOnlineData;
   localStorageData.updatedAt = currentTime.toISOString();
+  LocalStorage.Put("online", newOnlineData);
+  LocalStorage.SetUpdatedAt(currentTime.toISOString());
 
-  return localStorageData;
+  return CombineBooksFromStorage(localStorageData);
 };
 
 export default GetList;
