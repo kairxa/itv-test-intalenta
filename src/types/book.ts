@@ -7,3 +7,9 @@ export interface Book {
   publicationDate: string; // ISO Date
   favorite?: boolean;
 }
+
+export interface BookCreate
+  extends Pick<
+    Book,
+    "title" | "author" | "description" | "cover" | "publicationDate"
+  > {}

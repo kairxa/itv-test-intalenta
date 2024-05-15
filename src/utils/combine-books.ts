@@ -4,12 +4,12 @@ import { BookStorage } from "../types/storage";
 export default function CombineBooksFromStorage(
   storageData: BookStorage,
 ): Book[] {
-  const initialList = [...storageData.online, ...storageData.local].map(
-    (book) => ({
+  const initialList = [...storageData.online, ...storageData.local]
+    .map((book) => ({
       ...book,
       favorite: storageData.favorites.includes(book.id),
-    }),
-  );
+    }))
+    .sort((a, b) => a.id - b.id);
   const sortedFavorites = [
     ...initialList.filter((book) => book.favorite),
     ...initialList.filter((book) => !book.favorite),

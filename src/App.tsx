@@ -3,14 +3,14 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.scss";
 import { useQuery } from "@tanstack/react-query";
-import GetList from "./apis/list";
+import { BookListGet } from "./apis/list";
 
 function App() {
   const [count, setCount] = useState(0);
 
   const { data: BookList } = useQuery({
     queryKey: ["get-list"],
-    queryFn: async () => await GetList(),
+    queryFn: async () => await BookListGet(),
   });
 
   return (
