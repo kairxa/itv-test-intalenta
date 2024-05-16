@@ -14,7 +14,10 @@ export interface StorageMethods {
   Put: (dataSource: BookDataSource, books: Book[]) => void;
   Delete: (id: number) => void; // only local
   Get: () => BookStorage;
-  ToggleFavorite: (id: number) => void;
+  GetOnline: () => Book[];
+  GetLocal: () => Book[];
+  GetFavorites: () => number[];
+  SetFavorites: (favorites: number[]) => void;
   SetTTL: (ttl: number) => void;
   SetUpdatedAt: (updatedAt: string) => void;
 }

@@ -1,5 +1,12 @@
 import { beforeEach, describe, expect, it, mock } from "bun:test";
 import LocalStorage from "./localStorage";
+import {
+  STORAGE_KEY_FAVORITES,
+  STORAGE_KEY_LOCAL,
+  STORAGE_KEY_ONLINE,
+  STORAGE_KEY_TTL,
+  STORAGE_KEY_UPDATEDAT,
+} from "../../constants";
 
 const getItemMock = mock();
 const setItemMock = mock();
@@ -30,7 +37,7 @@ describe("LocalStorage helpers", () => {
     LocalStorage.Put("online", mockData);
 
     expect(setItemMock).toHaveBeenCalledWith(
-      "ITV_TEST_STORE_online",
+      STORAGE_KEY_ONLINE,
       JSON.stringify(mockData),
     );
   });
@@ -40,10 +47,7 @@ describe("LocalStorage helpers", () => {
 
     LocalStorage.Delete(1);
 
-    expect(setItemMock).toHaveBeenCalledWith(
-      "ITV_TEST_STORE_local",
-      '[{"id":2}]',
-    );
+    expect(setItemMock).toHaveBeenCalledWith(STORAGE_KEY_LOCAL, '[{"id":2}]');
   });
 
   it("should get existing data", () => {
@@ -64,33 +68,28 @@ describe("LocalStorage helpers", () => {
     });
   });
 
-  it("should toggle favorites on and off", () => {
-    getItemMock.mockReturnValueOnce("[1,4]"); // favorites
-    getItemMock.mockReturnValueOnce("[1,4]"); // favorites
+  it("should set favorites", () => {
+    const favorites = [1, 4];
 
-    LocalStorage.ToggleFavorite(1);
-
-    expect(setItemMock).toHaveBeenCalledWith("ITV_TEST_STORE_favorites", "[4]");
-
-    LocalStorage.ToggleFavorite(2);
+    LocalStorage.SetFavorites(favorites);
 
     expect(setItemMock).toHaveBeenCalledWith(
-      "ITV_TEST_STORE_favorites",
-      "[1,4,2]",
+      STORAGE_KEY_FAVORITES,
+      JSON.stringify(favorites),
     );
   });
 
   it("should update ttl", () => {
     LocalStorage.SetTTL(7_200_000);
 
-    expect(setItemMock).toHaveBeenCalledWith("ITV_TEST_STORE_ttl", "7200000");
+    expect(setItemMock).toHaveBeenCalledWith(STORAGE_KEY_TTL, "7200000");
   });
 
   it("should update updatedAt", () => {
     LocalStorage.SetUpdatedAt("2024-05-14T15:49:22.087Z");
 
     expect(setItemMock).toHaveBeenCalledWith(
-      "ITV_TEST_STORE_updatedAt",
+      STORAGE_KEY_UPDATEDAT,
       "2024-05-14T15:49:22.087Z",
     );
   });

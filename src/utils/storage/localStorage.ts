@@ -1,4 +1,12 @@
-import { STORAGE_DEFAULT_TTL, STORAGE_KEY } from "../../constants";
+import {
+  STORAGE_DEFAULT_TTL,
+  STORAGE_KEY,
+  STORAGE_KEY_FAVORITES,
+  STORAGE_KEY_LOCAL,
+  STORAGE_KEY_ONLINE,
+  STORAGE_KEY_TTL,
+  STORAGE_KEY_UPDATEDAT,
+} from "../../constants";
 import { Book } from "../../types/book";
 import { StorageMethods } from "../../types/storage";
 
@@ -7,60 +15,48 @@ const LocalStorage: StorageMethods = {
     localStorage.setItem(`${STORAGE_KEY}_${dataSource}`, JSON.stringify(books));
   },
   Delete: (id) => {
-    const storageKey = `${STORAGE_KEY}_local`;
-    const localBooks = JSON.parse(
-      localStorage.getItem(storageKey) || `[]`,
-    ) as Book[];
-
+    const localBooks = LocalStorage.GetLocal();
     const updatedLocalBooks = localBooks.filter((book) => book.id !== id);
 
-    localStorage.setItem(storageKey, JSON.stringify(updatedLocalBooks));
+    localStorage.setItem(STORAGE_KEY_LOCAL, JSON.stringify(updatedLocalBooks));
+  },
+  GetOnline: (): Book[] => {
+    return JSON.parse(
+      localStorage.getItem(STORAGE_KEY_ONLINE) || "[]",
+    ) as Book[];
+  },
+  GetLocal: (): Book[] => {
+    return JSON.parse(
+      localStorage.getItem(STORAGE_KEY_LOCAL) || "[]",
+    ) as Book[];
+  },
+  GetFavorites: (): number[] => {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY_FAVORITES) || "[]");
   },
   Get: () => {
-    const onlineBooks = JSON.parse(
-      localStorage.getItem(`${STORAGE_KEY}_online`) || "[]",
-    ) as Book[];
-    const localBooks = JSON.parse(
-      localStorage.getItem(`${STORAGE_KEY}_local`) || "[]",
-    ) as Book[];
-    const favoriteList = JSON.parse(
-      localStorage.getItem(`${STORAGE_KEY}_favorites`) || "[]",
-    ) as number[];
+    const onlineBooks = LocalStorage.GetOnline();
+    const localBooks = LocalStorage.GetLocal();
+    const favoriteList = LocalStorage.GetFavorites();
 
     return {
       online: onlineBooks,
       local: localBooks,
       favorites: favoriteList,
-      updatedAt: localStorage.getItem(`${STORAGE_KEY}_updatedAt`) || "",
+      updatedAt: localStorage.getItem(STORAGE_KEY_UPDATEDAT) || "",
       ttl: parseInt(
-        localStorage.getItem(`${STORAGE_KEY}_ttl`) || `${STORAGE_DEFAULT_TTL}`,
+        localStorage.getItem(STORAGE_KEY_TTL) || `${STORAGE_DEFAULT_TTL}`,
         10,
       ),
     };
   },
-  ToggleFavorite: (id: number) => {
-    const favoriteList = JSON.parse(
-      localStorage.getItem(`${STORAGE_KEY}_favorites`) || "[]",
-    ) as number[];
-
-    const favoriteIdx = favoriteList.indexOf(id);
-
-    if (favoriteIdx === -1) {
-      favoriteList.push(id);
-    } else {
-      favoriteList.splice(favoriteIdx, 1);
-    }
-
-    localStorage.setItem(
-      `${STORAGE_KEY}_favorites`,
-      JSON.stringify(favoriteList),
-    );
+  SetFavorites: (favorites: number[]) => {
+    localStorage.setItem(STORAGE_KEY_FAVORITES, JSON.stringify(favorites));
   },
   SetTTL: (ttl) => {
-    localStorage.setItem(`${STORAGE_KEY}_ttl`, `${ttl}`);
+    localStorage.setItem(STORAGE_KEY_TTL, `${ttl}`);
   },
   SetUpdatedAt: (updatedAt) => {
-    localStorage.setItem(`${STORAGE_KEY}_updatedAt`, updatedAt);
+    localStorage.setItem(STORAGE_KEY_UPDATEDAT, updatedAt);
   },
 };
 

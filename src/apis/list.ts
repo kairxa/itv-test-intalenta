@@ -65,5 +65,14 @@ export const BookUpdate = (updatedBook: Book) => {
 };
 
 export const BookFavorite = (id: number) => {
-  LocalStorage.ToggleFavorite(id);
+  const favorites = LocalStorage.GetFavorites();
+  const favoriteIdx = favorites.indexOf(id);
+
+  if (favoriteIdx === -1) {
+    favorites.push(id);
+  } else {
+    favorites.splice(favoriteIdx, 1);
+  }
+
+  LocalStorage.SetFavorites(favorites);
 };
