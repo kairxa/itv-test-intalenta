@@ -11,9 +11,10 @@ import {
   BookAdd,
   BookDelete,
   BookFavorite,
+  BookGetByID,
   BookListGet,
   BookUpdate,
-} from "./list";
+} from "./book";
 
 // Sad that we need to mock the whole localStorage again here :')
 // https://github.com/oven-sh/bun/issues/10428
@@ -85,6 +86,18 @@ describe("Book List operations", () => {
     );
   });
 
+  it("should get book by ID", async () => {
+    getItemMock.mockReturnValueOnce('[{"id":1},{"id":2}]'); // online
+    getItemMock.mockReturnValueOnce('[{"id":3},{"id":4}]'); // local
+    getItemMock.mockReturnValueOnce("[1,4]"); // favorites
+    getItemMock.mockReturnValueOnce("2024-05-14T15:49:22.087Z"); // updated at
+    getItemMock.mockReturnValueOnce(`${1_800_000}`); // ttl
+
+    const book = await BookGetByID(3);
+
+    expect(book).toMatchObject({ id: 3 });
+  });
+
   it("should add initial book to local list", () => {
     getItemMock.mockReturnValueOnce('[{"id":1},{"id":2}]'); // online
     getItemMock.mockReturnValueOnce(undefined); // local
@@ -118,6 +131,14 @@ describe("Book List operations", () => {
   it("should add another book to local list", () => {
     const initialLocal = JSON.stringify([
       {
+        title: "Title 2",
+        author: "Another Me",
+        description: "Description 2",
+        cover: "",
+        publicationDate: "2024-05-14T15:49:22.087Z",
+        id: 1000001,
+      },
+      {
         title: "Title",
         author: "Me",
         description: "Description",
@@ -133,9 +154,9 @@ describe("Book List operations", () => {
     getItemMock.mockReturnValueOnce(`${1_800_000}`); // ttl
 
     BookAdd({
-      title: "Title 2",
-      author: "Another Me",
-      description: "Description 2",
+      title: "Title 3",
+      author: "Yet Another Me",
+      description: "Description 3",
       cover: "",
       publicationDate: "2024-05-14T15:49:22.087Z",
     });
@@ -158,6 +179,14 @@ describe("Book List operations", () => {
           cover: "",
           publicationDate: "2024-05-14T15:49:22.087Z",
           id: 1000001,
+        },
+        {
+          title: "Title 3",
+          author: "Yet Another Me",
+          description: "Description 3",
+          cover: "",
+          publicationDate: "2024-05-14T15:49:22.087Z",
+          id: 1000002,
         },
       ]),
     );

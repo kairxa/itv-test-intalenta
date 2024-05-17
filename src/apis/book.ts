@@ -1,6 +1,7 @@
-import { BASE_API_URL } from "../constants";
+import { BASE_API_URL, BOOK_LOCAL_MIN_STARTING_ID } from "../constants";
 import { Book, BookCreate } from "../types/book";
-import CombineBooksFromStorage from "../utils/combine-books";
+import { BookStorage } from "../types/storage";
+import CombineBooksFromStorage from "../utils/combineBooks";
 import LocalStorage from "../utils/storage/localStorage";
 
 const getBookListOnline = async (): Promise<Book[]> => {
@@ -9,17 +10,25 @@ const getBookListOnline = async (): Promise<Book[]> => {
   return books;
 };
 
-export const BookListGet = async (): Promise<Book[]> => {
+const getBookListOffline = (): [BookStorage, boolean] => {
   const localStorageData = LocalStorage.Get();
   const currentTime = new Date();
   const updateTTLTime = new Date(
     new Date(localStorageData.updatedAt).getTime() + localStorageData.ttl,
   );
+  const shouldUpdateOnlineList = currentTime > updateTTLTime;
 
-  if (currentTime < updateTTLTime) {
+  return [localStorageData, shouldUpdateOnlineList];
+};
+
+export const BookListGet = async (): Promise<Book[]> => {
+  const [localStorageData, shouldUpdateOnlineList] = getBookListOffline();
+
+  if (!shouldUpdateOnlineList) {
     return CombineBooksFromStorage(localStorageData);
   }
 
+  const currentTime = new Date();
   const newOnlineData = await getBookListOnline();
   localStorageData.online = newOnlineData;
   localStorageData.updatedAt = currentTime.toISOString();
@@ -29,11 +38,24 @@ export const BookListGet = async (): Promise<Book[]> => {
   return CombineBooksFromStorage(localStorageData);
 };
 
+export const BookGetByID = async (id: number): Promise<Book> => {
+  // Decided not to use the mentioned get by ID route, since our source of truth
+  // is now the data inside localStorage, not the data from list API.
+  // We still need to consider the locally stored books data anyway everytime we requested
+  // book by ID, so we better do BookListGet everytime we do BookGetByID
+
+  const bookList = await BookListGet();
+
+  return bookList.find((book) => book.id === id) || ({} as Book);
+};
+
 export const BookAdd = (book: BookCreate) => {
   const localStorageData = LocalStorage.Get();
-  const localBooks = structuredClone(localStorageData.local);
+  const localBooks = structuredClone(localStorageData.local).sort(
+    (bookA, bookB) => bookA.id - bookB.id,
+  );
 
-  let id = 1_000_000; // arbitrary starting ID, not for production but fits for this test
+  let id = BOOK_LOCAL_MIN_STARTING_ID; // arbitrary starting ID, not for production but fits for this test
   if (localBooks.length > 0) id = localBooks[localBooks.length - 1].id + 1; // auto-increment yay
 
   localBooks.push({

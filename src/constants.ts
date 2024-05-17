@@ -7,5 +7,7 @@ export const STORAGE_KEY_UPDATEDAT = `${STORAGE_KEY}_updatedAt`;
 
 export const STORAGE_DEFAULT_TTL = 3_600_000; // 60 * 60 * 1000
 
+export const BOOK_LOCAL_MIN_STARTING_ID = 1_000_000;
+
 export const BASE_API_URL =
   "https://my-json-server.typicode.com/cutamar/mock/books";

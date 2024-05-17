@@ -16,6 +16,8 @@
   --main-color: var(--react-blue);
 
   --background-color: #242424;
+
+  --transform-ease-in-out: transform ease-in-out 0.2s;
 }
 
 .material-symbols-outlined {
@@ -93,7 +95,7 @@ a {
 
   cursor: pointer;
 
-  transition: transform ease-in-out 0.2s;
+  transition: var(--transform-ease-in-out);
 
   &:hover {
     z-index: 10;
@@ -238,6 +240,90 @@ a {
       &::after {
         transform: translateY(6px);
       }
+    }
+  }
+}
+
+.control {
+  margin-top: 16px;
+
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+
+  width: 100%;
+
+  padding: 16px 0;
+
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+
+  &__button {
+    border: none;
+
+    padding: 8px 16px;
+
+    background-color: transparent;
+
+    position: relative;
+
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--main-color);
+
+    cursor: pointer;
+
+    transition: var(--transform-ease-in-out);
+
+    &:hover {
+      transform: scale(1.15);
+    }
+  }
+
+  &__prev,
+  &__next {
+    display: flex;
+    flex: 1;
+  }
+
+  &__prev {
+    justify-content: flex-end;
+
+    > .control__button::before {
+      content: "";
+
+      border-bottom: solid 2px var(--main-color);
+      border-left: solid 2px var(--main-color);
+
+      width: 8px;
+      height: 8px;
+
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+
+      transform: rotate(45deg);
+    }
+  }
+
+  &__next {
+    justify-content: flex-start;
+
+    > .control__button::after {
+      content: "";
+
+      border-right: solid 2px var(--main-color);
+      border-bottom: solid 2px var(--main-color);
+
+      width: 8px;
+      height: 8px;
+
+      position: absolute;
+      right: 0;
+      bottom: 10px;
+
+      transform: rotate(-45deg);
     }
   }
 }
