@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { BookListGet } from "../apis/book";
+import { BookFavorite, BookListGet } from "../apis/book";
 import { useEffect, useState } from "react";
 import { Book } from "../types/book";
 import BookCard from "../components/BookCard";
@@ -11,10 +11,15 @@ export default function List() {
   const [shouldShowPrev, setShouldShowPrev] = useState(false);
   const [shouldShowNext, setShouldShowNext] = useState(true);
   const [displayedBookList, setDisplayedBookList] = useState<Book[]>([]);
-  const { data: bookList } = useQuery({
+  const { data: bookList, refetch: refetchBookList } = useQuery({
     queryKey: ["get-list"],
     queryFn: async () => await BookListGet(),
   });
+
+  const handleToggleFavorite = (id: number) => {
+    BookFavorite(id);
+    refetchBookList();
+  };
 
   const handleNextPage = () => setCurrentPage(currentPage + 1);
   const handlePrevPage = () => setCurrentPage(currentPage - 1);
@@ -24,16 +29,27 @@ export default function List() {
     const targetSliceIndex = currentPage * PER_PAGE;
     setDisplayedBookList(bookList?.slice(offset, targetSliceIndex) || []);
 
-    setShouldShowPrev(currentPage > 1);
+    setShouldShowPrev(currentPage > 1 && displayedBookList.length > 0);
     setShouldShowNext(targetSliceIndex < (bookList?.length || 0));
-  }, [bookList, currentPage]);
+  }, [bookList, displayedBookList, currentPage]);
 
   return (
-    <section className="content-container">
-      <section className="cards-container">
-        {displayedBookList?.map((book) => (
-          <BookCard key={book.id} book={book} />
-        ))}
+    <>
+      <section className="header">
+        <section className="create">
+          <button className="create__button">Create Book</button>
+        </section>
+      </section>
+      <section className="content">
+        <section className="cards-container">
+          {displayedBookList?.map((book) => (
+            <BookCard
+              key={book.id}
+              book={book}
+              onToggleFavorite={handleToggleFavorite}
+            />
+          ))}
+        </section>
       </section>
       <section className="control">
         <section className="control__prev">
@@ -51,6 +67,6 @@ export default function List() {
           )}
         </section>
       </section>
-    </section>
+    </>
   );
 }

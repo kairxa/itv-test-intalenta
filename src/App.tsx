@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { BookListGet } from "./apis/list";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import List from "./pages/List";
 

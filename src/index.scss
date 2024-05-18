@@ -1,3 +1,5 @@
+$main-color: #61dbfb;
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -14,6 +16,7 @@
 
   --react-blue: #61dbfb;
   --main-color: var(--react-blue);
+  --inverse-text-color: #eaeaea;
 
   --background-color: #242424;
 
@@ -62,7 +65,7 @@ a {
   }
 }
 
-.content-container {
+.content {
   display: flex;
   flex-direction: column;
 }
@@ -167,10 +170,17 @@ a {
   &__favorite {
     margin: 4px 0;
 
+    border: none;
+
     width: 16px;
     height: 16px;
 
+    padding: 0;
+
+    background-color: transparent;
     color: var(--main-color);
+
+    cursor: pointer;
 
     > .material-symbols-outlined {
       font-size: 16px;
@@ -241,6 +251,39 @@ a {
         transform: translateY(6px);
       }
     }
+  }
+}
+
+.header {
+  display: flex;
+
+  width: 100%;
+
+  padding: 16px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.create {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+
+  &__button {
+    border: none;
+    border-radius: 8px;
+
+    padding: 8px 16px;
+
+    background-color: darken($color: $main-color, $amount: 25%);
+
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--inverse-text-color);
+
+    cursor: pointer;
   }
 }
 

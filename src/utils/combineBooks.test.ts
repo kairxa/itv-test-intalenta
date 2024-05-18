@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { BookStorage } from "../types/storage";
 import { STORAGE_DEFAULT_TTL } from "../constants";
-import CombineBooksFromStorage from "./combine-books";
+import CombineBooksFromStorage from "./combineBooks";
 
 describe("CombineBooksFromStorage", () => {
   it("should combine books properly", () => {

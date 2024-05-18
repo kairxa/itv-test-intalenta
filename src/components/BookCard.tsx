@@ -4,8 +4,9 @@ import isBookLocallyAdded from "../utils/isBookLocallyAdded";
 
 interface BookCardProps {
   book: Book;
+  onToggleFavorite: (id: number) => void;
 }
-export default function BookCard({ book }: BookCardProps) {
+export default function BookCard({ book, onToggleFavorite }: BookCardProps) {
   return (
     <section key={book.id} className="card">
       <img
@@ -17,14 +18,15 @@ export default function BookCard({ book }: BookCardProps) {
         <section className="card__detail">
           <section className="card__title">{book.title}</section>
           <section className="card__author">{book.author}</section>
-          <section
+          <button
             className={clsx(
               "card__favorite",
               book.favorite ? "card__favorite--active" : "",
             )}
+            onClick={() => onToggleFavorite(book.id)}
           >
             <span className="material-symbols-outlined">favorite</span>
-          </section>
+          </button>
         </section>
         {isBookLocallyAdded(book) && (
           <button className="card__menu">
