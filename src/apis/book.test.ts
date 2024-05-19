@@ -45,7 +45,24 @@ describe("Book List operations", () => {
     getItemMock.mockReturnValueOnce("[1,4]"); // favorites
     getItemMock.mockReturnValueOnce("2024-05-14T15:49:22.087Z"); // updated at
     getItemMock.mockReturnValueOnce(`${1_800_000}`); // ttl
-    const bookList = await BookListGet();
+    const bookList = await BookListGet({});
+
+    expect(bookList).toMatchObject([
+      { id: 1 },
+      { id: 2 },
+      { id: 3 },
+      { id: 4 },
+    ]);
+    expect(setItemMock).not.toHaveBeenCalled();
+  });
+
+  it("should BookListGet of books sorted by favorites", async () => {
+    getItemMock.mockReturnValueOnce('[{"id":1},{"id":2}]'); // online
+    getItemMock.mockReturnValueOnce('[{"id":3},{"id":4}]'); // local
+    getItemMock.mockReturnValueOnce("[1,4]"); // favorites
+    getItemMock.mockReturnValueOnce("2024-05-14T15:49:22.087Z"); // updated at
+    getItemMock.mockReturnValueOnce(`${1_800_000}`); // ttl
+    const bookList = await BookListGet({ showFavoritesFirst: true });
 
     expect(bookList).toMatchObject([
       { id: 1 },
@@ -67,7 +84,37 @@ describe("Book List operations", () => {
     getItemMock.mockReturnValueOnce("[1,4]"); // favorites
     getItemMock.mockReturnValueOnce("2024-05-13T15:49:22.087Z"); // updated at
     getItemMock.mockReturnValueOnce(`${1_800_000}`); // ttl
-    const bookList = await BookListGet();
+    const bookList = await BookListGet({});
+
+    expect(bookList).toMatchObject([
+      { id: 3 },
+      { id: 4 },
+      { id: 5 },
+      { id: 6 },
+    ]);
+    expect(setItemMock).toHaveBeenCalledTimes(2);
+    expect(setItemMock).toHaveBeenCalledWith(
+      "ITV_TEST_STORE_online",
+      JSON.stringify([{ id: 5 }, { id: 6 }]),
+    );
+    expect(setItemMock).toHaveBeenCalledWith(
+      "ITV_TEST_STORE_updatedAt",
+      "2024-05-14T15:49:22.087Z",
+    );
+  });
+
+  it("should BookListGet of books from fetch with sorted favorites", async () => {
+    fetchMock.mockResolvedValueOnce({
+      json: () => {
+        return [{ id: 5 }, { id: 6 }];
+      },
+    });
+    getItemMock.mockReturnValueOnce('[{"id":1},{"id":2}]'); // online
+    getItemMock.mockReturnValueOnce('[{"id":3},{"id":4}]'); // local
+    getItemMock.mockReturnValueOnce("[1,4]"); // favorites
+    getItemMock.mockReturnValueOnce("2024-05-13T15:49:22.087Z"); // updated at
+    getItemMock.mockReturnValueOnce(`${1_800_000}`); // ttl
+    const bookList = await BookListGet({ showFavoritesFirst: true });
 
     expect(bookList).toMatchObject([
       { id: 4 },

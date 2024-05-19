@@ -3,6 +3,7 @@ import { BookFavorite, BookListGet } from "../apis/book";
 import { useEffect, useState } from "react";
 import { Book } from "../types/book";
 import BookCard from "../components/BookCard";
+import { Link } from "react-router-dom";
 
 const PER_PAGE = 5;
 
@@ -11,9 +12,10 @@ export default function List() {
   const [shouldShowPrev, setShouldShowPrev] = useState(false);
   const [shouldShowNext, setShouldShowNext] = useState(true);
   const [displayedBookList, setDisplayedBookList] = useState<Book[]>([]);
+  const [showFavoritesFirst, setShowFavoritesFirst] = useState(false);
   const { data: bookList, refetch: refetchBookList } = useQuery({
     queryKey: ["get-list"],
-    queryFn: async () => await BookListGet(),
+    queryFn: async () => await BookListGet({ showFavoritesFirst }),
   });
 
   const handleToggleFavorite = (id: number) => {
@@ -29,15 +31,33 @@ export default function List() {
     const targetSliceIndex = currentPage * PER_PAGE;
     setDisplayedBookList(bookList?.slice(offset, targetSliceIndex) || []);
 
-    setShouldShowPrev(currentPage > 1 && displayedBookList.length > 0);
+    setShouldShowPrev(currentPage > 1 && !!bookList && bookList.length > 0);
     setShouldShowNext(targetSliceIndex < (bookList?.length || 0));
-  }, [bookList, displayedBookList, currentPage]);
+  }, [bookList, currentPage]);
+
+  useEffect(() => {
+    refetchBookList();
+  }, [showFavoritesFirst, refetchBookList]);
 
   return (
     <>
       <section className="header">
+        <section className="filter">
+          <label htmlFor="sort">
+            <input
+              type="checkbox"
+              name="sort"
+              id="sort"
+              checked={showFavoritesFirst}
+              onChange={() => setShowFavoritesFirst(!showFavoritesFirst)}
+            />
+            Showing favorites first
+          </label>
+        </section>
         <section className="create">
-          <button className="create__button">Create Book</button>
+          <button className="create__button">
+            <Link to="/create">Create Book</Link>
+          </button>
         </section>
       </section>
       <section className="content">

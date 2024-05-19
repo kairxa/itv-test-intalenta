@@ -21,11 +21,18 @@ const getBookListOffline = (): [BookStorage, boolean] => {
   return [localStorageData, shouldUpdateOnlineList];
 };
 
-export const BookListGet = async (): Promise<Book[]> => {
+export const BookListGet = async ({
+  showFavoritesFirst = false,
+}: {
+  showFavoritesFirst?: boolean;
+}): Promise<Book[]> => {
   const [localStorageData, shouldUpdateOnlineList] = getBookListOffline();
 
   if (!shouldUpdateOnlineList) {
-    return CombineBooksFromStorage(localStorageData);
+    return CombineBooksFromStorage({
+      storageData: localStorageData,
+      sortFavorites: showFavoritesFirst,
+    });
   }
 
   const currentTime = new Date();
@@ -35,7 +42,10 @@ export const BookListGet = async (): Promise<Book[]> => {
   LocalStorage.Put("online", newOnlineData);
   LocalStorage.SetUpdatedAt(currentTime.toISOString());
 
-  return CombineBooksFromStorage(localStorageData);
+  return CombineBooksFromStorage({
+    storageData: localStorageData,
+    sortFavorites: showFavoritesFirst,
+  });
 };
 
 export const BookGetByID = async (id: number): Promise<Book> => {
@@ -44,7 +54,7 @@ export const BookGetByID = async (id: number): Promise<Book> => {
   // We still need to consider the locally stored books data anyway everytime we requested
   // book by ID, so we better do BookListGet everytime we do BookGetByID
 
-  const bookList = await BookListGet();
+  const bookList = await BookListGet({});
 
   return bookList.find((book) => book.id === id) || ({} as Book);
 };
