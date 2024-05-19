@@ -9,5 +9,7 @@ export const STORAGE_DEFAULT_TTL = 3_600_000; // 60 * 60 * 1000
 
 export const BOOK_LOCAL_MIN_STARTING_ID = 1_000_000;
 
+export const URL_REGEX_VALIDATION = /^(http|https):\/\//i; // not a serious validation, just for the sake of regex testing.
+
 export const BASE_API_URL =
   "https://my-json-server.typicode.com/cutamar/mock/books";
