@@ -75,6 +75,7 @@ export default function List() {
         <section className="control__prev">
           {shouldShowPrev && (
             <button onClick={handlePrevPage} className="control__button">
+              <span className="material-symbols-outlined">chevron_left</span>
               PREVIOUS
             </button>
           )}
@@ -83,6 +84,7 @@ export default function List() {
           {shouldShowNext && (
             <button onClick={handleNextPage} className="control__button">
               NEXT
+              <span className="material-symbols-outlined">chevron_right</span>
             </button>
           )}
         </section>
