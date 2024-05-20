@@ -42,7 +42,9 @@ const LocalStorage: StorageMethods = {
       online: onlineBooks,
       local: localBooks,
       favorites: favoriteList,
-      updatedAt: localStorage.getItem(STORAGE_KEY_UPDATEDAT) || "",
+      updatedAt:
+        localStorage.getItem(STORAGE_KEY_UPDATEDAT) ||
+        "1970-01-01T00:00:00.000Z",
       ttl: parseInt(
         localStorage.getItem(STORAGE_KEY_TTL) || `${STORAGE_DEFAULT_TTL}`,
         10,
