@@ -1,0 +1,32 @@
+.list {
+  &__header {
+    @extend .header;
+
+    &__create {
+      display: flex;
+      flex: 1;
+      justify-content: flex-end;
+
+      &__button {
+        @extend .button;
+
+        > a {
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--inverse-text-color);
+        }
+      }
+    }
+
+    &__filter {
+      > input,
+      > label {
+        cursor: pointer;
+      }
+
+      > label {
+        margin-left: 8px;
+      }
+    }
+  }
+}

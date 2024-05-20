@@ -4,7 +4,7 @@ import { BookAdd } from "../apis/book";
 import { toast } from "react-toastify";
 import Form from "../components/Form";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import HeaderBack from "../components/HeaderBack";
 export default function Create() {
   const {
     register,
@@ -38,14 +38,7 @@ export default function Create() {
 
   return (
     <>
-      <section className="header">
-        <Link to="/">
-          <button className="button--ghost">
-            <span className="material-symbols-outlined">chevron_left</span>
-            Back
-          </button>
-        </Link>
-      </section>
+      <HeaderBack />
       <Form
         onSubmit={onSubmit}
         isValid={isValid}

@@ -1,0 +1,29 @@
+.details {
+  margin-left: 16px;
+
+  border-left: solid 1px var(--main-color);
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+
+  padding-left: 16px;
+
+  &__item {
+    > h4 {
+      margin-top: 0;
+      margin-bottom: 12px;
+
+      color: var(--main-color);
+    }
+  }
+
+  &__cover {
+    max-width: 240px;
+
+    > img {
+      width: 100%;
+    }
+  }
+}

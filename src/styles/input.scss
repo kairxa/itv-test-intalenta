@@ -1,0 +1,39 @@
+.input {
+  display: flex;
+  flex-direction: column;
+
+  > input,
+  > textarea {
+    margin-top: 8px;
+
+    border: none;
+    border-bottom: solid 1px var(--main-color);
+
+    font-size: 14px;
+    line-height: 24px;
+
+    background-color: var(--background-color);
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  > input {
+    height: 24px;
+  }
+
+  > textarea {
+    min-height: 72px;
+
+    resize: vertical;
+  }
+
+  &__error {
+    margin-top: 8px;
+
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--error-color);
+  }
+}

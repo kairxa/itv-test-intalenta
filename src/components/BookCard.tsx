@@ -1,14 +1,25 @@
 import clsx from "clsx";
 import { Book } from "../types/book";
 import isBookLocallyAdded from "../utils/isBookLocallyAdded";
+import { Link } from "react-router-dom";
 
 interface BookCardProps {
   book: Book;
   onToggleFavorite: (id: number) => void;
+  onMenuTrigger: (bookID: number) => void;
 }
-export default function BookCard({ book, onToggleFavorite }: BookCardProps) {
+
+// Some seemingly stray Link components; taken from Google Play Books implementation.
+export default function BookCard({
+  book,
+  onToggleFavorite,
+  onMenuTrigger,
+}: BookCardProps) {
+  const handleToggleMenu = () => onMenuTrigger(book.id);
+
   return (
     <section key={book.id} className="card">
+      <Link to={`/${book.id}`} className="link" />
       <img
         src={book.cover}
         alt={`Cover Picture of ${book.title}`}
@@ -16,6 +27,7 @@ export default function BookCard({ book, onToggleFavorite }: BookCardProps) {
       />
       <section className="card__metadata">
         <section className="card__detail">
+          <Link to={`/${book.id}`} className="link" />
           <section className="card__title">{book.title}</section>
           <section className="card__author">{book.author}</section>
           <button
@@ -29,8 +41,8 @@ export default function BookCard({ book, onToggleFavorite }: BookCardProps) {
           </button>
         </section>
         {isBookLocallyAdded(book) && (
-          <button className="card__menu">
-            <div className="card__menu__icon"></div>
+          <button className="card__menu__button" onClick={handleToggleMenu}>
+            <span className="material-symbols-outlined">more_vert</span>
           </button>
         )}
       </section>

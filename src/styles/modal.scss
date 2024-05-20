@@ -1,0 +1,71 @@
+.modal {
+  border: solid 1px var(--main-color);
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  min-width: 480px;
+
+  padding: 16px 24px;
+
+  background-color: var(--background-color);
+
+  &__overlay {
+    @extend .link;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 10;
+
+    background-color: transparentize($color: #ffffff, $amount: 0.7);
+  }
+
+  &__header {
+    margin-bottom: 16px;
+
+    display: flex;
+
+    > h4 {
+      margin: 0;
+
+      flex: 1;
+    }
+  }
+
+  &__close {
+    border: none;
+
+    display: flex;
+
+    padding: 0;
+
+    background-color: transparent;
+
+    cursor: pointer;
+  }
+
+  &__control,
+  &__item {
+    display: flex;
+  }
+
+  &__control {
+    gap: 16px;
+
+    &__button {
+      @extend .button;
+
+      &--proceed {
+        @extend .button;
+
+        border: solid 1px var(--main-color);
+
+        background-color: var(--background-color);
+      }
+    }
+  }
+}
