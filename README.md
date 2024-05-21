@@ -1,30 +1,24 @@
-# React + TypeScript + Vite
+# Interview Test for Intalenta
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interview test accommodating CRUD system for displaying, creating, editing, and
+deleting items.  
+There is "caching" mechanism in localStorage and there's also where we put locally
+added items.
 
-Currently, two official plugins are available:
+## Available routes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+`/` - For list of items
+`/create` - For creating locally saved item
+`/:id` - For showing item details
+`/:id/edit` - For editing locally saved item details
 
-## Expanding the ESLint configuration
+Delete locally saved item exists within items in `/` route.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Commands to run
 
-- Configure the top-level `parserOptions` property like this:
+`bun install` - Install deps for local development
+`bun run dev` - Starting development server
+`bun test` - Unit tests
+`bunx playwright test` - e2e tests
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Walkthrough
