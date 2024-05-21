@@ -30,7 +30,7 @@ export default function List() {
     BookDelete(deleteBookID);
 
     refetchBookList();
-    toggleDeleteModalVisibility();
+    handleToggleDeleteModalVisibility();
   };
   // This one is for Menu Book Modal
   const {
@@ -47,8 +47,8 @@ export default function List() {
   };
   const handleMenuDeleteTrigger = () => {
     setDeleteBookID(menuBookID);
-    toggleMenuModalVisibility();
-    toggleDeleteModalVisibility();
+    handleToggleMenuModalVisibility();
+    handleToggleDeleteModalVisibility();
   };
 
   // Toggling favorite book
