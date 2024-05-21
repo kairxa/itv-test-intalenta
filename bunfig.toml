@@ -1,0 +1,2 @@
+[test]
+root = './src/' # excluding tests folder since they are for playwright and playwright errors when used inside bun. :(

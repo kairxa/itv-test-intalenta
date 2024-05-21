@@ -18,7 +18,7 @@ export default function BookCard({
   const handleToggleMenu = () => onMenuTrigger(book.id);
 
   return (
-    <section key={book.id} className="card">
+    <section key={book.id} className="card" data-testid="book">
       <Link to={`/${book.id}`} className="link" />
       <img
         src={book.cover}
@@ -36,12 +36,17 @@ export default function BookCard({
               book.favorite ? "card__favorite--active" : "",
             )}
             onClick={() => onToggleFavorite(book.id)}
+            data-testid="book-button-favorite"
           >
             <span className="material-symbols-outlined">favorite</span>
           </button>
         </section>
         {isBookLocallyAdded(book) && (
-          <button className="card__menu__button" onClick={handleToggleMenu}>
+          <button
+            className="card__menu__button"
+            onClick={handleToggleMenu}
+            data-testid="book-button-menu"
+          >
             <span className="material-symbols-outlined">more_vert</span>
           </button>
         )}

@@ -9,33 +9,36 @@ import Modal from "../components/Modal";
 const PER_PAGE = 5;
 
 export default function List() {
-  const [currentPage, setCurrentPage] = useState(1);
+  // Set toggle favorite sort state
   const [showFavoritesFirst, setShowFavoritesFirst] = useState(false);
+  // Fetching book data
   const { data: bookList, refetch: refetchBookList } = useQuery({
     queryKey: ["get-list", { showFavoritesFirst }],
     queryFn: async () => await BookListGet({ showFavoritesFirst }),
   });
+
+  // Modal related stuffs
+  // This one is for Delete Book Modal
   const {
     bookID: deleteBookID,
     isModalVisible: isDeleteModalVisible,
     toggleModalVisibility: toggleDeleteModalVisibility,
     setBookID: setDeleteBookID,
   } = useModal();
+  const handleToggleDeleteModalVisibility = () => toggleDeleteModalVisibility();
+  const handleDeleteBook = () => {
+    BookDelete(deleteBookID);
+
+    refetchBookList();
+    toggleDeleteModalVisibility();
+  };
+  // This one is for Menu Book Modal
   const {
     bookID: menuBookID,
     isModalVisible: isMenuModalVisible,
     toggleModalVisibility: toggleMenuModalVisibility,
     setBookID: setMenuBookID,
   } = useModal();
-
-  const handleToggleFavorite = useCallback(
-    (id: number) => {
-      BookFavorite(id);
-      refetchBookList();
-    },
-    [refetchBookList],
-  );
-  const handleToggleDeleteModalVisibility = () => toggleDeleteModalVisibility();
   const handleToggleMenuModalVisibility = () => toggleMenuModalVisibility();
   const handleSetMenuModalBookID = (bookID: number) => setMenuBookID(bookID);
   const handleMenuTrigger = (bookID: number) => {
@@ -47,13 +50,18 @@ export default function List() {
     toggleMenuModalVisibility();
     toggleDeleteModalVisibility();
   };
-  const handleDeleteBook = () => {
-    BookDelete(deleteBookID);
 
-    refetchBookList();
-    toggleDeleteModalVisibility();
-  };
+  // Toggling favorite book
+  const handleToggleFavorite = useCallback(
+    (id: number) => {
+      BookFavorite(id);
+      refetchBookList();
+    },
+    [refetchBookList],
+  );
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
   const offset = useMemo(() => (currentPage - 1) * PER_PAGE, [currentPage]);
   const targetSliceIndex = useMemo(() => currentPage * PER_PAGE, [currentPage]);
   const displayedBookList = useMemo(
@@ -69,6 +77,7 @@ export default function List() {
   const handleChangeFavoritesSort = () =>
     setShowFavoritesFirst(!showFavoritesFirst);
 
+  // Refetch mechanism when toggling favorite sort checkbox
   useEffect(() => {
     refetchBookList();
   }, [showFavoritesFirst, refetchBookList]);

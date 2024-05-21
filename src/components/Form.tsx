@@ -18,21 +18,32 @@ export default function Form({
     <form className="form" onSubmit={(e) => onSubmit(e)}>
       <label className="input">
         Title
-        <input type="text" {...register("title", { required: true })} />
+        <input
+          type="text"
+          {...register("title", { required: true })}
+          data-testid="input-title"
+        />
         {errors.title && (
           <span className="input__error">Title is required.</span>
         )}
       </label>
       <label className="input">
         Author
-        <input type="text" {...register("author", { required: true })} />
+        <input
+          type="text"
+          {...register("author", { required: true })}
+          data-testid="input-author"
+        />
         {errors.author && (
           <span className="input__error">Author is required.</span>
         )}
       </label>
       <label className="input">
         Description
-        <textarea {...register("description")} />
+        <textarea
+          {...register("description")}
+          data-testid="input-description"
+        />
       </label>
       <label className="input">
         Cover
@@ -44,6 +55,7 @@ export default function Form({
                 URL_REGEX_VALIDATION.test(value) || "Cover needs to be a URL.",
             },
           })}
+          data-testid="input-cover"
         />
         {errors.cover && (
           <span className="input__error">{errors.cover.message}</span>
@@ -54,6 +66,7 @@ export default function Form({
         <input
           type="date"
           {...register("publicationDate", { required: true })}
+          data-testid="input-publicationDate"
         />
       </label>
       <button type="submit" className="form__submit-button" disabled={!isValid}>
